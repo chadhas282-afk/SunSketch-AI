@@ -8,3 +8,33 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #120a00;
+            --panel-bg: rgba(30, 20, 10, 0.6);
+            --border-color: rgba(255, 170, 0, 0.15);
+            --primary-color: #ffaa00;
+            --primary-glow: rgba(255, 170, 0, 0.4);
+            --text-main: #fffcf8;
+            --text-muted: #e5ccb3;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #2a1600 100%);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        .ambient-light {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--primary-glow) 0%, rgba(0,0,0,0) 70%);
+            filter: blur(80px);
+            z-index: -1;
