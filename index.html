@@ -38,3 +38,23 @@
             background: radial-gradient(circle, var(--primary-glow) 0%, rgba(0,0,0,0) 70%);
             filter: blur(80px);
             z-index: -1;
+             pointer-events: none;
+        }
+        header {
+            padding: 2rem;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, #fff, #ffcc55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        header p {
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            font-weight: 300;
+        }
