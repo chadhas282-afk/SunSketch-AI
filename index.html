@@ -98,3 +98,23 @@
         }
         .particles {
             position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            background: rgba(255, 200, 50, 0.15);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
+            10% { opacity: 0.6; scale: 1; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-100px) translateX(100px) scale(0); opacity: 0; }
+        }
