@@ -178,3 +178,23 @@
             font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        button:hover {
+            background: rgba(255, 170, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        button.primary {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+        button.primary:hover {
+            background: #e69900;
+            box-shadow: 0 0 25px var(--primary-glow);
+        }
+        button:disabled {
