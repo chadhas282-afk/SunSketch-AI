@@ -118,3 +118,23 @@ class CNNModel:
         self.conv = Conv3x3(8, filter_size=3)
         self.relu1 = ReLU()
         self.pool = MaxPool2(pool_size=2)
+        self.dense1 = Dense(13 * 13 * 8, 128)
+        self.relu2 = ReLU()
+        self.dense2 = Dense(128, num_classes)
+        self.softmax = SoftmaxCrossEntropy()
+
+        self.class_names = [
+            "circle", "triangle", "square", "rectangle", "line"
+        ]
+
+    def forward(self, image):
+        out = self.conv.forward(image)
+        out = self.relu1.forward(out)
+        out = self.pool.forward(out)
+        out = self.dense1.forward(out)
+        out = self.relu2.forward(out)
+        out = self.dense2.forward(out)
+        probs = self.softmax.forward(out)
+        return probs
+
+    def train_step(self, image, label_idx, learn_rate=0.01):
