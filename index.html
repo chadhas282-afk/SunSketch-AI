@@ -278,3 +278,23 @@
             height: 40px;
             border: 4px solid rgba(255,255,255,0.1);
             border-left-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+        }
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+                padding: 0 1rem 1.5rem 1rem;
+            }
+            .sidebar, .workspace {
+                width: 100%;
