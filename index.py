@@ -138,3 +138,22 @@ class CNNModel:
         return probs
 
     def train_step(self, image, label_idx, learn_rate=0.01):
+        probs = self.forward(image)
+        loss = self.softmax.calculate_loss(label_idx)
+        acc = 1 if np.argmax(probs) == label_idx else 0
+
+        gradient = self.softmax.backward(label_idx)
+        gradient = self.dense2.backward(gradient, learn_rate)
+        gradient = self.relu2.backward(gradient)
+        gradient = self.dense1.backward(gradient, learn_rate)
+        gradient = self.pool.backward(gradient)
+        gradient = self.relu1.backward(gradient)
+        self.conv.backward(gradient, learn_rate)
+
+        return loss, acc
+
+    def predict(self, image):
+        probs = self.forward(image)
+        pred_idx = np.argmax(probs)
+        confidence = probs[pred_idx]
+        return self.class_names[pred_idx], confidence
