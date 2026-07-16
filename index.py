@@ -38,3 +38,23 @@ class MaxPool2:
     def forward(self, input_vol):
         self.last_input = input_vol
         H, W, num_filters = input_vol.shape
+        out_h = H // self.pool_size
+        out_w = W // self.pool_size
+
+        output = np.zeros((out_h, out_w, num_filters))
+
+        for i in range(out_h):
+            for j in range(out_w):
+                im_region = input_vol[(i * self.pool_size):(i * self.pool_size + self.pool_size), 
+                                      (j * self.pool_size):(j * self.pool_size + self.pool_size)]
+                output[i, j] = np.amax(im_region, axis=(0, 1))
+
+        return output
+
+    def backward(self, d_L_d_out):
+        d_L_d_in = np.zeros(self.last_input.shape)
+        H, W, num_filters = self.last_input.shape
+        out_h = H // self.pool_size
+        out_w = W // self.pool_size
+
+        for i in range(out_h):
