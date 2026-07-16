@@ -218,3 +218,22 @@ def preprocess_image(image_matrix, target_size=(28, 28)):
         
     from PIL import Image
     pil_img = Image.fromarray((image_matrix * 255).astype(np.uint8))
+    resample_filter = Image.Resampling.BILINEAR if hasattr(Image, 'Resampling') else Image.BILINEAR
+    resized_pil = pil_img.resize(target_size, resample_filter)
+    
+    resized = np.array(resized_pil).astype(float) / 255.0
+    
+    max_val = np.max(resized)
+    if max_val > 0:
+        resized = resized / max_val
+        
+    resized[resized > 0.1] = 1.0
+    resized[resized <= 0.1] = 0.0
+    
+    return resized
+
+def extract_centroid(pixel_matrix):
+    y_coords, x_coords = np.where(pixel_matrix > 0)
+    if len(y_coords) == 0:
+        return 0, 0
+    return np.mean(x_coords), np.mean(y_coords)
