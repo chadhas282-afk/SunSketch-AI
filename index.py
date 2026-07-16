@@ -58,3 +58,23 @@ class MaxPool2:
         out_w = W // self.pool_size
 
         for i in range(out_h):
+            for j in range(out_w):
+                im_region = self.last_input[(i * self.pool_size):(i * self.pool_size + self.pool_size), 
+                                            (j * self.pool_size):(j * self.pool_size + self.pool_size)]
+
+                for f in range(num_filters):
+                    flat_idx = np.argmax(im_region[:, :, f])
+                    y, x = np.unravel_index(flat_idx, (self.pool_size, self.pool_size))
+                    d_L_d_in[i * self.pool_size + y, j * self.pool_size + x, f] = d_L_d_out[i, j, f]
+
+        return d_L_d_in
+
+class ReLU:
+    def forward(self, input_vol):
+        self.last_input = input_vol
+        return np.maximum(0, input_vol)
+
+    def backward(self, d_L_d_out):
+        d_L_d_in = d_L_d_out.copy()
+        d_L_d_in[self.last_input <= 0] = 0
+        return d_L_d_in
