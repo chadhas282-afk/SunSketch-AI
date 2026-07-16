@@ -198,3 +198,23 @@ def preprocess_image(image_matrix, target_size=(28, 28)):
         min_y, max_y = np.min(y_coords), np.max(y_coords)
         
         w = max_x - min_x
+        h = max_y - min_y
+        pad = max(int(max(w, h) * 0.15), 10)
+        
+        side = max(w, h) + 2 * pad
+        cx = min_x + w // 2
+        cy = min_y + h // 2
+        
+        crop_min_x = max(0, int(cx - side / 2))
+        crop_max_x = min(image_matrix.shape[1], int(cx + side / 2))
+        crop_min_y = max(0, int(cy - side / 2))
+        crop_max_y = min(image_matrix.shape[0], int(cy + side / 2))
+        
+        image_matrix = image_matrix[crop_min_y:crop_max_y, crop_min_x:crop_max_x]
+
+    h, w = image_matrix.shape
+    if h == 0 or w == 0:
+        return np.zeros(target_size)
+        
+    from PIL import Image
+    pil_img = Image.fromarray((image_matrix * 255).astype(np.uint8))
