@@ -38,7 +38,7 @@
             background: radial-gradient(circle, var(--primary-glow) 0%, rgba(0,0,0,0) 70%);
             filter: blur(80px);
             z-index: -1;
-             pointer-events: none;
+            pointer-events: none;
         }
         header {
             padding: 2rem;
@@ -138,7 +138,7 @@
         }
         .canvas-container:hover {
             border-color: rgba(255, 170, 0, 0.5);
-            }
+        }
         canvas {
             position: absolute;
             top: 0;
@@ -158,7 +158,7 @@
             z-index: 20;
             opacity: 0;
             transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            }
+        }
         svg.visible {
             opacity: 1;
         }
@@ -238,7 +238,7 @@
             flex-direction: column;
             gap: 0.25rem;
             transition: all 0.3s ease;
-            }
+        }
         .stat-item:hover {
             background: rgba(0, 0, 0, 0.3);
             transform: translateX(4px);
@@ -438,7 +438,7 @@ clearBtn.addEventListener('click', () => {
     svgOverlay.innerHTML = '';
     predictionResult.textContent = '-';
     accuracyResult.textContent = 'Draw a shape';
-    });
+});
 analyzeBtn.addEventListener('click', async () => {
     const pixelBuffer = new Uint32Array(ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer);
     if (!pixelBuffer.some(color => color !== 0)) {
@@ -478,3 +478,27 @@ function renderResults(data) {
             <feComposite in="SourceGraphic" in2="blur" operator="over" />
         </filter>
     </defs>`;
+    svgOverlay.innerHTML = filter + svgOverlay.innerHTML;
+    Array.from(svgOverlay.children).forEach(child => {
+        if (child.tagName !== 'defs') {
+            child.setAttribute('filter', 'url(#glow)');
+        }
+    });
+    svgOverlay.classList.add('visible');
+    predictionResult.textContent = data.predicted_shape;
+    accuracyResult.textContent = `${(data.confidence * 100).toFixed(1)}% Accuracy`;
+    predictionResult.style.animation = 'none';
+    predictionResult.offsetHeight;
+    predictionResult.style.animation = 'slideIn 0.5s ease forwards';
+}
+const style = document.createElement('style');
+style.innerHTML = `
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
