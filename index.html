@@ -238,3 +238,23 @@
             flex-direction: column;
             gap: 0.25rem;
             transition: all 0.3s ease;
+            }
+        .stat-item:hover {
+            background: rgba(0, 0, 0, 0.3);
+            transform: translateX(4px);
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #fff;
+            word-break: break-all;
+        }
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
