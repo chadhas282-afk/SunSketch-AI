@@ -18,3 +18,23 @@ class Conv3x3:
         patches = np.lib.stride_tricks.as_strided(input_img, shape=shape, strides=strides)
 
         self.patches_col = patches.reshape(-1, self.filter_size * self.filter_size)
+        filters_col = self.filters.reshape(self.num_filters, -1)
+
+        out_col = np.dot(self.patches_col, filters_col.T)
+        output = out_col.reshape(out_h, out_w, self.num_filters)
+        return output
+
+    def backward(self, d_L_d_out, learn_rate):
+        d_out_col = d_L_d_out.reshape(-1, self.num_filters)
+        d_filters_col = np.dot(d_out_col.T, self.patches_col)
+        d_filters = d_filters_col.reshape(self.filters.shape)
+        self.filters -= learn_rate * d_filters
+        return None
+
+class MaxPool2:
+    def __init__(self, pool_size=2):
+        self.pool_size = pool_size
+
+    def forward(self, input_vol):
+        self.last_input = input_vol
+        H, W, num_filters = input_vol.shape
