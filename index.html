@@ -458,3 +458,23 @@ analyzeBtn.addEventListener('click', async () => {
             })
         });
         const data = await response.json();
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        renderResults(data);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to analyze shape. Ensure backend is running.');
+    } finally {
+        loading.classList.remove('active');
+        analyzeBtn.disabled = false;
+    }
+});
+function renderResults(data) {
+    svgOverlay.innerHTML = data.svg;
+    const filter = `<defs>
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+    </defs>`;
