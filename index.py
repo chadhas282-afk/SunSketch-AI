@@ -78,3 +78,23 @@ class ReLU:
         d_L_d_in = d_L_d_out.copy()
         d_L_d_in[self.last_input <= 0] = 0
         return d_L_d_in
+    
+class Dense:
+    def __init__(self, input_len, nodes):
+        self.weights = np.random.randn(input_len, nodes) * np.sqrt(2.0 / input_len)
+        self.biases = np.zeros(nodes)
+
+    def forward(self, input_vol):
+        self.last_input_shape = input_vol.shape
+        self.last_input = input_vol.flatten()
+        return np.dot(self.last_input, self.weights) + self.biases
+
+    def backward(self, d_L_d_out, learn_rate):
+        d_L_d_w = np.outer(self.last_input, d_L_d_out)
+        d_L_d_b = d_L_d_out
+        d_L_d_inputs = np.dot(self.weights, d_L_d_out)
+        self.weights -= learn_rate * d_L_d_w
+        self.biases -= learn_rate * d_L_d_b
+        return d_L_d_inputs.reshape(self.last_input_shape)
+
+class SoftmaxCrossEntropy:
