@@ -98,3 +98,23 @@ class Dense:
         return d_L_d_inputs.reshape(self.last_input_shape)
 
 class SoftmaxCrossEntropy:
+    def forward(self, input_vec):
+        self.last_input = input_vec
+        shifted_logits = input_vec - np.max(input_vec)
+        exps = np.exp(shifted_logits)
+        self.probs = exps / np.sum(exps)
+        return self.probs
+
+    def backward(self, true_label_idx):
+        gradient = self.probs.copy()
+        gradient[true_label_idx] -= 1
+        return gradient
+
+    def calculate_loss(self, true_label_idx):
+        return -np.log(self.probs[true_label_idx] + 1e-9)
+
+class CNNModel:
+    def __init__(self, num_classes=5):
+        self.conv = Conv3x3(8, filter_size=3)
+        self.relu1 = ReLU()
+        self.pool = MaxPool2(pool_size=2)
