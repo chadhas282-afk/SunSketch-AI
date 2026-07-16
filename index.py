@@ -157,3 +157,23 @@ class CNNModel:
         pred_idx = np.argmax(probs)
         confidence = probs[pred_idx]
         return self.class_names[pred_idx], confidence
+def save_weights(self, filepath="shape_weights.npz"):
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        full_path = os.path.join(dir_path, filepath)
+        np.savez(
+            full_path, 
+            conv_filters=self.conv.filters, 
+            dense1_weights=self.dense1.weights, 
+            dense1_biases=self.dense1.biases,
+            dense2_weights=self.dense2.weights,
+            dense2_biases=self.dense2.biases
+        )
+        print(f"Weights saved to {full_path}")
+
+    def load_weights(self, filepath="shape_weights.npz"):
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        full_path = os.path.join(dir_path, filepath)
+        if os.path.exists(full_path):
+            data = np.load(full_path)
+            self.conv.filters = data['conv_filters']
+            if 'dense1_weights' in data:
