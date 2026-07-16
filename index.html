@@ -378,3 +378,23 @@
     </script>
     <script>
 const canvas = document.getElementById('drawCanvas');
+const ctx = canvas.getContext('2d');
+const svgOverlay = document.getElementById('svgOverlay');
+const clearBtn = document.getElementById('clearBtn');
+const analyzeBtn = document.getElementById('analyzeBtn');
+const loading = document.getElementById('loading');
+const predictionResult = document.getElementById('predictionResult');
+const accuracyResult = document.getElementById('accuracyResult');
+ctx.lineWidth = 14;
+ctx.lineCap = 'round';
+ctx.lineJoin = 'round';
+ctx.strokeStyle = '#ffffff';
+let isDrawing = false;
+let lastX = 0;
+let lastY = 0;
+function getPointerPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
