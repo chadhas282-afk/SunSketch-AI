@@ -177,3 +177,24 @@ def save_weights(self, filepath="shape_weights.npz"):
             data = np.load(full_path)
             self.conv.filters = data['conv_filters']
             if 'dense1_weights' in data:
+                
+                self.dense1.weights = data['dense1_weights']
+                self.dense1.biases = data['dense1_biases']
+                self.dense2.weights = data['dense2_weights']
+                self.dense2.biases = data['dense2_biases']
+                print(f"Weights loaded from {full_path}")
+            else:
+                print("Warning: Old weights format detected. Cannot load. Using random.")
+        else:
+            print(f"Warning: {full_path} not found. Using random initialized weights.")
+
+import numpy as np
+
+def preprocess_image(image_matrix, target_size=(28, 28)):
+    y_coords, x_coords = np.where(image_matrix > 0.1)
+    
+    if len(x_coords) > 0:
+        min_x, max_x = np.min(x_coords), np.max(x_coords)
+        min_y, max_y = np.min(y_coords), np.max(y_coords)
+        
+        w = max_x - min_x
