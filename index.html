@@ -358,3 +358,23 @@
         </section>
         <aside class="sidebar glass-panel" style="justify-content: center; align-items: center; text-align: center;">
             <div style="font-size: 1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem;">Prediction</div>
+            <div id="predictionResult" style="font-size: 3rem; font-weight: 700; color: #fff; text-transform: capitalize; margin-bottom: 0.5rem; text-shadow: 0 0 20px var(--primary-glow);">-</div>
+            <div id="accuracyResult" style="font-size: 1.5rem; color: var(--primary-color); font-weight: 600;">Draw a shape</div>
+        </aside>
+    </main>
+    <script>
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            let p = document.createElement('div');
+            p.className = 'particle';
+            let size = Math.random() * 4 + 2;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+            p.style.animationDelay = (Math.random() * 10) + 's';
+            particlesContainer.appendChild(p);
+        }
+    </script>
+    <script>
+const canvas = document.getElementById('drawCanvas');
