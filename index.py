@@ -237,3 +237,64 @@ def extract_centroid(pixel_matrix):
     if len(y_coords) == 0:
         return 0, 0
     return np.mean(x_coords), np.mean(y_coords)
+
+def process_circle(pixel_matrix):
+    cx, cy = extract_centroid(pixel_matrix)
+    y_coords, x_coords = np.where(pixel_matrix > 0)
+    
+    distances = np.sqrt((x_coords - cx)**2 + (y_coords - cy)**2)
+    r = np.max(distances) if len(distances) > 0 else 0
+    
+    area = np.pi * (r ** 2)
+    circumference = 2 * np.pi * r
+    
+    svg_path = f'<circle cx="{cx}" cy="{cy}" r="{r}" stroke="var(--primary-color, #4f46e5)" fill="transparent" stroke-width="3" vector-effect="non-scaling-stroke"/>'
+    return {
+        "shape": "circle",
+        "properties": {
+            "radius": float(round(r, 2)),
+            "area": float(round(area, 2)),
+            "circumference": float(round(circumference, 2)),
+            "centroid": (float(round(cx, 2)), float(round(cy, 2)))
+        },
+        "svg": svg_path
+    }
+
+def process_rectangle(pixel_matrix, shape_name="rectangle"):
+    y_coords, x_coords = np.where(pixel_matrix > 0)
+    
+    if len(x_coords) == 0:
+        return {"shape": shape_name, "properties": {}, "svg": ""}
+        
+    min_x, max_x = np.min(x_coords), np.max(x_coords)
+    min_y, max_y = np.min(y_coords), np.max(y_coords)
+    
+    width = max_x - min_x
+    height = max_y - min_y
+    
+    if shape_name == "square":
+        side = (width + height) / 2
+        cx, cy = (min_x + max_x) / 2, (min_y + max_y) / 2
+        min_x, min_y = cx - side/2, cy - side/2
+        width = height = side
+    
+    area = width * height
+    perimeter = 2 * (width + height)
+    
+    svg_path = f'<rect x="{min_x}" y="{min_y}" width="{width}" height="{height}" stroke="var(--primary-color, #4f46e5)" fill="transparent" stroke-width="3" vector-effect="non-scaling-stroke"/>'
+    
+    return {
+        "shape": shape_name,
+        "properties": {
+            "width": float(round(width, 2)),
+            "height": float(round(height, 2)),
+            "area": float(round(area, 2)),
+            "perimeter": float(round(perimeter, 2))
+        },
+        "svg": svg_path
+    }
+
+def process_triangle(pixel_matrix):
+    y_coords, x_coords = np.where(pixel_matrix > 0)
+    
+    if len(x_coords) == 0:
