@@ -398,3 +398,23 @@ function getPointerPos(e) {
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
+    return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY
+    };
+}
+function startDrawing(e) {
+    e.preventDefault();
+    isDrawing = true;
+    const pos = getPointerPos(e);
+    lastX = pos.x;
+    lastY = pos.y;
+    svgOverlay.classList.remove('visible');
+}
+function draw(e) {
+    if (!isDrawing) return;
+    e.preventDefault();
+    const pos = getPointerPos(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(pos.x, pos.y);
