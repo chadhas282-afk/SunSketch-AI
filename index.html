@@ -438,3 +438,23 @@ clearBtn.addEventListener('click', () => {
     svgOverlay.innerHTML = '';
     predictionResult.textContent = '-';
     accuracyResult.textContent = 'Draw a shape';
+    });
+analyzeBtn.addEventListener('click', async () => {
+    const pixelBuffer = new Uint32Array(ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer);
+    if (!pixelBuffer.some(color => color !== 0)) {
+        alert("Please draw a shape first!");
+        return;
+    }
+    loading.classList.add('active');
+    analyzeBtn.disabled = true;
+    try {
+        const response = await fetch('/api/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                image: canvas.toDataURL('image/png')
+            })
+        });
+        const data = await response.json();
