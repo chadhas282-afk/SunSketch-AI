@@ -78,7 +78,7 @@ class ReLU:
         d_L_d_in = d_L_d_out.copy()
         d_L_d_in[self.last_input <= 0] = 0
         return d_L_d_in
-    
+
 class Dense:
     def __init__(self, input_len, nodes):
         self.weights = np.random.randn(input_len, nodes) * np.sqrt(2.0 / input_len)
@@ -157,7 +157,8 @@ class CNNModel:
         pred_idx = np.argmax(probs)
         confidence = probs[pred_idx]
         return self.class_names[pred_idx], confidence
-def save_weights(self, filepath="shape_weights.npz"):
+
+    def save_weights(self, filepath="shape_weights.npz"):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         full_path = os.path.join(dir_path, filepath)
         np.savez(
@@ -177,7 +178,6 @@ def save_weights(self, filepath="shape_weights.npz"):
             data = np.load(full_path)
             self.conv.filters = data['conv_filters']
             if 'dense1_weights' in data:
-                
                 self.dense1.weights = data['dense1_weights']
                 self.dense1.biases = data['dense1_biases']
                 self.dense2.weights = data['dense2_weights']
@@ -318,7 +318,7 @@ def process_triangle(pixel_matrix):
     
     def dist(p1, p2):
         return np.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
-            
+        
     s1 = dist(vertices[0], vertices[1])
     s2 = dist(vertices[1], vertices[2])
     s3 = dist(vertices[2], vertices[0])
@@ -339,7 +339,7 @@ def process_triangle(pixel_matrix):
     points_str = " ".join([f"{p[0]},{p[1]}" for p in vertices])
     svg_path = f'<polygon points="{points_str}" stroke="var(--primary-color, #4f46e5)" fill="transparent" stroke-width="3" vector-effect="non-scaling-stroke"/>'
     
-     return {
+    return {
         "shape": "triangle",
         "properties": {
             "type": triangle_type,
@@ -378,7 +378,7 @@ def process_line(pixel_matrix):
         "properties": {
             "length": float(round(length, 2)),
             "endpoints": ((float(p1[0]), float(p1[1])), (float(p2[0]), float(p2[1])))
-            },
+        },
         "svg": svg_path
     }
 
@@ -458,3 +458,12 @@ def predict():
             "geometry": geometry_data["properties"],
             "svg": geometry_data["svg"]
         }
+
+        return jsonify(response)
+
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5001)
