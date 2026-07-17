@@ -378,3 +378,23 @@ def process_line(pixel_matrix):
         "properties": {
             "length": float(round(length, 2)),
             "endpoints": ((float(p1[0]), float(p1[1])), (float(p2[0]), float(p2[1])))
+            },
+        "svg": svg_path
+    }
+
+def extract_geometry(predicted_class, pixel_matrix):
+    if predicted_class == "circle":
+        return process_circle(pixel_matrix)
+    elif predicted_class == "triangle":
+        return process_triangle(pixel_matrix)
+    elif predicted_class in ["square", "rectangle"]:
+        return process_rectangle(pixel_matrix, shape_name=predicted_class)
+    elif predicted_class == "line":
+        return process_line(pixel_matrix)
+    else:
+        raise ValueError(f"Unknown shape class: {predicted_class}")
+
+from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
+from flask import send_from_directory
+import base64
