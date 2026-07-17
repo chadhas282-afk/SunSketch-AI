@@ -318,3 +318,24 @@ def process_triangle(pixel_matrix):
     
     def dist(p1, p2):
         return np.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
+            
+    s1 = dist(vertices[0], vertices[1])
+    s2 = dist(vertices[1], vertices[2])
+    s3 = dist(vertices[2], vertices[0])
+    
+    perimeter = s1 + s2 + s3
+    s = perimeter / 2
+    area_squared = max(0, s * (s - s1) * (s - s2) * (s - s3))
+    area = np.sqrt(area_squared)
+    
+    tol = 0.15 * max(s1, s2, s3)
+    if abs(s1 - s2) < tol and abs(s2 - s3) < tol:
+        triangle_type = "equilateral"
+    elif abs(s1 - s2) < tol or abs(s2 - s3) < tol or abs(s1 - s3) < tol:
+        triangle_type = "isosceles"
+    else:
+        triangle_type = "scalene"
+        
+    points_str = " ".join([f"{p[0]},{p[1]}" for p in vertices])
+    svg_path = f'<polygon points="{points_str}" stroke="var(--primary-color, #4f46e5)" fill="transparent" stroke-width="3" vector-effect="non-scaling-stroke"/>'
+    
