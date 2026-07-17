@@ -418,3 +418,22 @@ def serve_index():
 
 @app.route('/logo.png')
 def serve_logo():
+    public_dir = os.path.dirname(os.path.realpath(__file__))
+    return send_from_directory(public_dir, 'logo.png')
+
+@app.route('/api/predict', methods=['POST'])
+def predict():
+    try:
+        data = request.json
+        if 'image' not in data:
+            return jsonify({'error': 'No image provided'}), 400
+
+        image_data = data['image']
+        if ',' in image_data:
+            image_data = image_data.split(',')[1]
+
+        image_bytes = base64.b64decode(image_data)
+        image = Image.open(io.BytesIO(image_bytes))
+
+        if image.mode != 'RGBA':
+            image = image.convert('RGBA')
