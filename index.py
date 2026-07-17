@@ -398,3 +398,23 @@ from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from flask import send_from_directory
 import base64
+import numpy as np
+from PIL import Image
+import io
+import os
+import traceback
+
+
+app = Flask(__name__)
+CORS(app)
+
+model = CNNModel(num_classes=5)
+model.load_weights("shape_weights.npz")
+
+@app.route('/')
+def serve_index():
+    public_dir = os.path.dirname(os.path.realpath(__file__))
+    return send_from_directory(public_dir, 'index.html')
+
+@app.route('/logo.png')
+def serve_logo():
