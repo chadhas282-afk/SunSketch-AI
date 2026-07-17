@@ -339,3 +339,22 @@ def process_triangle(pixel_matrix):
     points_str = " ".join([f"{p[0]},{p[1]}" for p in vertices])
     svg_path = f'<polygon points="{points_str}" stroke="var(--primary-color, #4f46e5)" fill="transparent" stroke-width="3" vector-effect="non-scaling-stroke"/>'
     
+     return {
+        "shape": "triangle",
+        "properties": {
+            "type": triangle_type,
+            "side_lengths": (float(round(s1, 2)), float(round(s2, 2)), float(round(s3, 2))),
+            "area": float(round(area, 2)),
+            "perimeter": float(round(perimeter, 2))
+        },
+        "svg": svg_path
+    }
+
+def process_line(pixel_matrix):
+    y_coords, x_coords = np.where(pixel_matrix > 0)
+    
+    if len(x_coords) == 0:
+        return {"shape": "line", "properties": {}, "svg": ""}
+        
+    points = np.column_stack((x_coords, y_coords))
+    
