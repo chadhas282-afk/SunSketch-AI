@@ -437,3 +437,24 @@ def predict():
 
         if image.mode != 'RGBA':
             image = image.convert('RGBA')
+
+        img_array = np.array(image)
+
+        if np.max(img_array[:, :, 3]) > 0:
+            pixel_matrix = img_array[:, :, 3] / 255.0
+        else:
+            gray = np.array(image.convert('L'))
+            pixel_matrix = 1.0 - (gray / 255.0)
+
+        processed_img = preprocess_image(pixel_matrix, target_size=(28, 28))
+
+        predicted_shape, confidence = model.predict(processed_img)
+
+        geometry_data = extract_geometry(predicted_shape, pixel_matrix)
+
+        response = {
+            "predicted_shape": predicted_shape,
+            "confidence": round(float(confidence), 4),
+            "geometry": geometry_data["properties"],
+            "svg": geometry_data["svg"]
+        }
