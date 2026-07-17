@@ -1,0 +1,10 @@
+{
+  "builds": [
+    { "src": "index.py", "use": "@vercel/python" },
+    { "src": "index.html", "use": "@vercel/static" }
+  ],
+  "rewrites": [
+    { "source": "/api/predict", "destination": "/index.py" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
