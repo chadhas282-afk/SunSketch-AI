@@ -298,3 +298,23 @@ def process_triangle(pixel_matrix):
     y_coords, x_coords = np.where(pixel_matrix > 0)
     
     if len(x_coords) == 0:
+        return {"shape": "triangle", "properties": {}, "svg": ""}
+        
+    points = np.column_stack((x_coords, y_coords))
+    
+    top_idx = np.argmin(points[:, 1])
+    top_point = points[top_idx]
+    
+    min_x, max_x = np.min(points[:, 0]), np.max(points[:, 0])
+    max_y = np.max(points[:, 1])
+    
+    dist_bl = (points[:, 0] - min_x)**2 + (points[:, 1] - max_y)**2
+    bl_point = points[np.argmin(dist_bl)]
+    
+    dist_br = (points[:, 0] - max_x)**2 + (points[:, 1] - max_y)**2
+    br_point = points[np.argmin(dist_br)]
+    
+    vertices = [top_point, bl_point, br_point]
+    
+    def dist(p1, p2):
+        return np.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
