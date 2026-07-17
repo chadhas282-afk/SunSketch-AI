@@ -358,3 +358,23 @@ def process_line(pixel_matrix):
         
     points = np.column_stack((x_coords, y_coords))
     
+    idx_min_x, idx_max_x = np.argmin(points[:, 0]), np.argmax(points[:, 0])
+    idx_min_y, idx_max_y = np.argmin(points[:, 1]), np.argmax(points[:, 1])
+    
+    dist_x = np.linalg.norm(points[idx_min_x] - points[idx_max_x])
+    dist_y = np.linalg.norm(points[idx_min_y] - points[idx_max_y])
+    
+    if dist_x > dist_y:
+        p1, p2 = points[idx_min_x], points[idx_max_x]
+    else:
+        p1, p2 = points[idx_min_y], points[idx_max_y]
+        
+    length = np.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
+    
+    svg_path = f'<line x1="{p1[0]}" y1="{p1[1]}" x2="{p2[0]}" y2="{p2[1]}" stroke="var(--primary-color, #4f46e5)" stroke-width="3" vector-effect="non-scaling-stroke"/>'
+    
+    return {
+        "shape": "line",
+        "properties": {
+            "length": float(round(length, 2)),
+            "endpoints": ((float(p1[0]), float(p1[1])), (float(p2[0]), float(p2[1])))
